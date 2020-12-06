@@ -16,5 +16,8 @@ module.exports = {
     ecmaVersion: 2018,
   },
   rules: {
+    "linebreak-style": ["error", (require("os").EOL === "\r\n" ? "windows" : "unix")],
+    "allowForLoopAfterthoughts": 0,
+    "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }]
   },
 };
