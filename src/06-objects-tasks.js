@@ -115,32 +115,94 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  elem: null,
+  elemId: null,
+  elemClass: [],
+  elemAttr: null,
+  elemPseudoClass: [],
+  elemPseudoElem: null,
+  combinator: null,
+  selector1: null,
+  selector2: null,
+
+  element(value) {
+    this.elem = value;
+    return this;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.elemId = value;
+    return this;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.elemClass.push(value);
+    return this;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.elemAttr = value;
+    return this;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.elemPseudoClass.push(value);
+    return this;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.elemPseudoElem = value;
+    return this;
   },
 
   combine(/* selector1, combinator, selector2 */) {
+    /* this.selector1 = Object.assign({}, selector1).stringify();
+    console.log(this.selector1);
+    this.selector2 = Object.assign({}, selector2).stringify();
+    console.log(this.selector2);
+    this.combinator = combinator;
+    return this; */
     throw new Error('Not implemented');
+  },
+
+  stringify() {
+    let str = '';
+    if (this.elem) str += `${this.elem}`;
+    if (this.elemId) str += `#${this.elemId}`;
+    if (this.elemClass.length !== 0) {
+      this.elemClass.forEach((item) => {
+        str += `.${item}`;
+      });
+    }
+    if (this.elemAttr) str += `[${this.elemAttr}]`;
+    if (this.elemPseudoClass.length !== 0) {
+      this.elemPseudoClass.forEach((item) => {
+        str += `:${item}`;
+      });
+    }
+    if (this.elemPseudoElem) str += `::${this.elemPseudoElem}`;
+    if (typeof this.selector1 === 'string' && typeof this.selector2 === 'string' && this.combinator) {
+      const selector = `${this.selector1} ${this.combinator} ${this.selector2}`;
+      this.resetSelectors();
+      return selector;
+    }
+    this.reset();
+    return str;
+  },
+
+  reset() {
+    this.elem = null;
+    this.elemId = null;
+    this.elemClass = [];
+    this.elemAttr = null;
+    this.elemPseudoClass = [];
+    this.elemPseudoElem = null;
+  },
+
+  resetSelectors() {
+    this.combinator = null;
+    this.selector1 = null;
+    this.selector2 = null;
   },
 };
 
